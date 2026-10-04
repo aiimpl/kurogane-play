@@ -53,9 +53,44 @@
   #title button.go { font: 500 16px/1 'Oswald', sans-serif; letter-spacing: .4em; padding: 16px 40px 16px 46px; color: var(--ink); background: rgba(14,18,22,.4); border: 1px solid rgba(238,240,240,.6); border-radius: 2px; cursor: pointer; }
   #title button.go:hover { background: rgba(238,240,240,.12); }
   #title button.go:disabled { opacity: .4; }
+  #title .gos { display: flex; gap: 18px; }
+  #dock { position: absolute; inset: 0; pointer-events: none; display: none; color: var(--ink); font: 400 12px/1.4 'Noto Sans JP', sans-serif; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+  #dock.on { display: block; }
+  #stage:has(#dock.on) #hud, #stage:has(#dock.on) #ov { display: none; }
+  #dock button { pointer-events: auto; cursor: pointer; font: 500 12px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .08em; color: var(--ink); background: rgba(14,18,22,.55); border: 1px solid var(--faint); border-radius: 2px; padding: 7px 10px; }
+  #dock button.on { border-color: var(--sel); box-shadow: 0 0 0 1px var(--sel) inset; color: #fff; }
+  #dock button:hover { background: rgba(238,240,240,.14); }
+  .dk-top { position: absolute; left: 30px; top: 24px; display: flex; align-items: center; gap: 22px; }
+  .dk-top b { font: 600 28px/1 'Oswald', sans-serif; letter-spacing: .24em; }
+  .dk-tabs { display: flex; gap: 6px; }
+  .dk-tabs .dead { opacity: .35; }
+  .dk-slots { position: absolute; inset: 0; }
+  .dk-slot { position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; padding: 0 !important; border-radius: 50% !important; font-size: 11px !important; letter-spacing: 0 !important; background: rgba(14,18,22,.4) !important; border: 1px dashed rgba(238,240,240,.7) !important; }
+  .dk-slot.used { border-style: solid !important; background: rgba(14,18,22,.7) !important; }
+  .dk-slot.on { border-color: var(--sel) !important; box-shadow: 0 0 0 2px var(--sel) !important; }
+  .dk-panel { position: absolute; right: 30px; top: 90px; width: 330px; padding: 16px 18px; background: rgba(10,13,16,.62); border: 1px solid rgba(238,240,240,.18); display: none; pointer-events: auto; }
+  .dk-panel.on { display: block; }
+  .dk-slotname { font: 500 15px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .12em; margin-bottom: 12px; }
+  .dk-lab { color: var(--dim); margin: 12px 0 6px; letter-spacing: .1em; font-size: 11px; }
+  .dk-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .dk-row.off { opacity: .3; pointer-events: none; }
+  .dk-row button { min-width: 44px; }
+  .dk-hint { color: var(--dim); margin-top: 14px; font-size: 11px; line-height: 1.7; }
+  .dk-stats { position: absolute; left: 30px; bottom: 90px; display: flex; gap: 26px; align-items: flex-end; padding: 14px 18px; background: rgba(10,13,16,.55); border: 1px solid rgba(238,240,240,.15); }
+  .dk-stats i { display: block; font-style: normal; color: var(--dim); font-size: 10px; letter-spacing: .14em; margin-bottom: 4px; }
+  .dk-stats b { font: 500 22px/1 'Oswald', sans-serif; }
+  .dk-stats .gm { display: block; width: 90px; height: 3px; background: rgba(238,240,240,.2); margin-top: 6px; }
+  .dk-stats .gm em { display: block; height: 100%; background: var(--own); }
+  .dk-stats .st { font: 500 13px/1.3 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .1em; max-width: 210px; }
+  .dk-stats .st.tender { color: #ffd27a; } .dk-stats .st.capsize, .dk-stats .st.sink { color: var(--foe); }
+  .dk-btns { position: absolute; left: 30px; bottom: 30px; display: flex; gap: 8px; }
+  .dk-btns .dk-go { border-color: rgba(238,240,240,.7); padding: 9px 28px; }
+  .dk-msg { position: absolute; left: 50%; top: 16%; transform: translateX(-50%); font: 500 22px/1.4 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .16em; opacity: 0; transition: opacity .6s; text-align: center; }
+  .dk-msg.on { opacity: 1; }
   #title .hint { font: 400 11px/1.9 'Noto Sans JP', sans-serif; color: var(--dim); letter-spacing: .06em; margin-top: 26px; }
   #lang { position: absolute; right: 26px; top: 22px; pointer-events: auto; cursor: pointer; font: 500 12px/1 'Noto Sans JP', sans-serif; letter-spacing: .12em; color: var(--ink); background: rgba(14,18,22,.35); border: 1px solid rgba(238,240,240,.4); border-radius: 2px; padding: 7px 12px; z-index: 6; }
   #stage:has(#title:not(.gone)) #hud, #stage:has(#title:not(.gone)) #ov { opacity: 0; }
+  #tag { position: absolute; left: 54px; bottom: 48px; font: 600 54px/1 'Oswald', sans-serif; letter-spacing: .06em; color: #eef0f0; opacity: 0; pointer-events: none; text-shadow: 0 2px 24px rgba(0,0,0,.5); }
   #endcard { position: absolute; left: 0; right: 0; top: 17%; text-align: center; color: #eef0f0; opacity: 0; pointer-events: none; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
   #endcard b { display: block; font: 600 104px/1 'Oswald', sans-serif; letter-spacing: .32em; margin-left: .32em; }
   #endcard i { display: block; font: 500 18px/1 'Oswald', sans-serif; font-style: normal; letter-spacing: .5em; margin-top: 24px; color: rgba(238,240,240,.75); }
@@ -82,9 +117,10 @@
     <p class="kanji">黒鉄</p>
     <p class="sub" data-t="cardSub">IRON FLEET</p>
     <p class="goal" data-t="goal"></p>
-    <button class="go" type="button" disabled data-t="start">START</button>
+    <div class="gos"><button class="go" type="button" disabled data-t="start">START</button><button class="go refit" type="button" data-t="refitBtn">REFIT</button></div>
     <p class="hint" data-t="hint"></p>
   </div>
+  <div id="tag"></div>
   <div id="endcard"><b>KUROGANE</b><i>IRON FLEET · three.js</i></div>
   <div id="end"><b data-t="lost">FLAGSHIP LOST</b><p id="endsub"></p><button type="button" data-t="again" onclick="location.reload()">AGAIN</button></div>
   <button id="lang" type="button">日本語</button>
