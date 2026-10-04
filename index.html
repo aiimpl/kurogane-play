@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Kurogane — Iron Fleet</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Cpath d=%22M1 11h14l-2 3H3z M5 11V8h5v3 M7 8V4h2v4 M10 9h5%22 stroke=%22%23e8e0d0%22 fill=%22none%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet">
 <style>
   :root { --ink: #eef0f0; --dim: rgba(238, 240, 240, .62); --faint: rgba(238, 240, 240, .3); --own: #d8e2ea; --foe: #ff6a4a; --sel: #9fe0ff; }
-  html, body { margin: 0; height: 100%; background: #0b0d0f; overflow: hidden; }
+  html, body { margin: 0; width: 100%; height: 100%; background: #0b0d0f; overflow: hidden; overscroll-behavior: none; }
   #stage { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: 50% 50%; overflow: hidden; user-select: none; -webkit-user-select: none; }
   #c { width: 100%; height: 100%; display: block; cursor: crosshair; }
   #ov { position: absolute; inset: 0; pointer-events: none; }
@@ -38,6 +38,7 @@
   .bar.foe i { background: var(--foe); }
   .bar.esc i { background: #ffd27a; }
   .bar.boss { height: 5px; }
+  .bar b { position: absolute; left: 50%; bottom: 9px; transform: translateX(-50%); white-space: nowrap; font: 500 11px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .12em; color: #ffb3a3; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
   .bar.sel { outline: 1px solid var(--sel); }
   .bar.sel::after { content: ''; position: absolute; left: 50%; top: -9px; margin-left: -4px; border: 4px solid transparent; border-top: 5px solid var(--sel); }
   .bar.flag::before { content: ''; position: absolute; left: -9px; top: -2px; width: 5px; height: 5px; background: var(--ink); transform: rotate(45deg); }
@@ -135,6 +136,7 @@
   .yd-ship .tg { padding: 6px 0; width: 62px; } .yd-ship .fl { padding: 5px 0; width: 26px; color: var(--dim); } .yd-ship .fl.on { color: #fff; }
   .yd-ship .nm b { font: 500 15px/1.2 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .06em; }
   .yd-ship .nm em, .yd-build .nm em, .yd-slip em { display: block; font-style: normal; color: var(--dim); font-size: 11px; }
+  .yd-ship .nm em.crew { color: #ffd27a; font-size: 10px; letter-spacing: .06em; }
   .yd-ship .hp { display: block; height: 3px; background: rgba(238,240,240,.16); margin-top: 5px; width: 160px; } .yd-ship .hp u { display: block; height: 100%; background: var(--own); }
   .yd-ship .pt { grid-column: 3 / 5; display: flex; gap: 6px; }
   .yd-ship .bt { display: flex; gap: 5px; grid-row: 1; grid-column: 4; }
@@ -170,6 +172,20 @@
   .yd-brief .go, #result .go { width: 100%; padding: 14px; font-size: 16px; letter-spacing: .4em; border-color: rgba(238,240,240,.7); }
   .yd-msg { position: absolute; left: 50%; top: 13%; transform: translateX(-50%); max-width: 900px; font: 500 18px/1.5 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .1em; text-align: center; opacity: 0; transition: opacity .5s; padding: 10px 20px; background: rgba(10,13,16,.6); }
   .yd-msg.on { opacity: 1; }
+  #ending { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: linear-gradient(rgba(6,8,10,.35), rgba(6,8,10,.7)); color: var(--ink); z-index: 8; }
+  #ending.on { display: flex; }
+  #stage:has(#ending.on) #hud, #stage:has(#ending.on) #ov { display: none; }
+  .en-box { width: 900px; text-align: center; }
+  .en-box p { font: 400 19px/1.9 'Shippori Mincho', 'Noto Sans JP', serif; letter-spacing: .08em; margin: 0 0 14px; opacity: 0; transform: translateY(6px); transition: opacity 1.6s, transform 1.6s; text-shadow: 0 2px 16px rgba(0,0,0,.6); }
+  .en-box p.last { margin-top: 30px; font-size: 21px; }
+  .en-title { margin-top: 40px; opacity: 0; transition: opacity 2s; } .en-title b { display: block; font: 600 72px/1 'Oswald', sans-serif; letter-spacing: .32em; margin-left: .32em; } .en-title i { display: block; font: 500 14px/1 'Oswald', 'Noto Sans JP', sans-serif; font-style: normal; letter-spacing: .2em; color: var(--dim); margin-top: 18px; }
+  .en-box .go { margin-top: 36px; opacity: 0; transition: opacity 1.2s; pointer-events: auto; cursor: pointer; font: 500 14px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .3em; padding: 12px 30px; color: var(--ink); background: transparent; border: 1px solid var(--faint); }
+  #ending.show p, #ending.show .en-title, #ending.show .go { opacity: 1; transform: none; }
+  #tip { position: absolute; left: 845px; bottom: 60px; transform: translateX(-50%); width: 470px; flex-direction: column; align-items: stretch; display: none; gap: 18px; align-items: center; padding: 16px 20px; background: rgba(10,13,16,.86); border: 1px solid rgba(159,224,255,.5); color: var(--ink); z-index: 9; pointer-events: auto; }
+  #tip.on { display: flex; }
+  #tip p { flex: 1; margin: 0; font: 400 14px/1.8 'Noto Sans JP', sans-serif; letter-spacing: .03em; }
+  #tip button { font: 500 13px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .2em; padding: 12px 18px; color: var(--ink); background: transparent; border: 1px solid var(--faint); cursor: pointer; white-space: nowrap; }
+  #stage.compact #tip { zoom: 1.5; left: 50%; bottom: 40px; width: 560px; }
   #result { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(8,10,12,.5); color: var(--ink); font: 400 12px/1.45 'Noto Sans JP', sans-serif; }
   #result.on { display: flex; }
   .rs-box { width: 620px; max-height: 820px; overflow-y: auto; padding: 30px 36px; background: rgba(10,13,16,.78); border: 1px solid rgba(238,240,240,.2); }
@@ -182,6 +198,36 @@
   #retreat { position: absolute; right: 30px; bottom: 76px; pointer-events: auto; cursor: pointer; font: 500 11px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .2em; color: var(--dim); background: rgba(14,18,22,.45); border: 1px solid var(--faint); border-radius: 2px; padding: 7px 12px; display: none; }
   #hud.campaign #retreat { display: block; }
   #hud.campaign .tr { top: 126px; } #hud.campaign #wave { display: none; }
+
+  /* touch screens and small screens */
+  #c { touch-action: none; }
+  #touchbar { position: absolute; right: 30px; bottom: 120px; display: none; gap: 8px; pointer-events: auto; }
+  #stage.touch #touchbar { display: flex; }
+  #touchbar button { font: 500 14px/1 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .12em; color: var(--ink); background: rgba(14,18,22,.55); border: 1px solid var(--faint); border-radius: 3px; padding: 14px 18px; }
+  #stage.touch .keys { display: none; }
+  #stage.touch .dk-slot { width: 52px; height: 52px; left: -26px; top: -26px; font-size: 14px !important; }
+  #stage.compact #yard { zoom: 1.7; inset: auto; left: 0; top: 0; width: 941px; height: 529px; }
+  #stage.compact .yd-top { left: 12px; top: 8px; right: 70px; gap: 16px; }
+  #stage.compact .yd-top b.yd-name { font-size: 18px; } #stage.compact .yd-res { gap: 12px; } #stage.compact .yd-res b { font-size: 15px; }
+  #stage.compact .yd-left { left: 10px; top: 36px; width: 545px; max-height: 480px; }
+  #stage.compact .yd-body { max-height: 440px; }
+  #stage.compact .yd-right { right: 10px; top: 36px; width: 360px; bottom: 10px; gap: 6px; }
+  #stage.compact .yd-card { padding: 6px 10px; } #stage.compact .yd-brief { padding: 10px 12px; } #stage.compact .yd-brief .txt { font-size: 12px; line-height: 1.6; }
+  #stage.compact #hud { zoom: 1.8; inset: auto; left: 0; top: 0; width: 889px; height: 500px; }
+  #stage.compact #ov { inset: 0; }
+  #stage.compact #hud .tl { display: none; }
+  #stage.compact #fleet { left: 12px; bottom: 10px; gap: 6px; } #stage.compact #fleet button { width: 84px; }
+  #stage.compact #hud .goal-hud { right: 12px; top: 36px; } #stage.compact #hud.campaign .tr { top: 80px; right: 12px; }
+  #stage.compact #retreat { right: 12px; bottom: 10px; } #stage.compact #touchbar { right: 12px; bottom: 50px; }
+  #stage.compact #dock { zoom: 1.6; inset: auto; left: 0; top: 0; width: 1000px; height: 562px; } #stage.compact .dk-slots { zoom: 0.625; width: 1600px; height: 900px; inset: auto; left: 0; top: 0; }
+  #stage.compact .dk-top { left: 12px; top: 10px; } #stage.compact .dk-aa { left: 12px; top: 52px; } #stage.compact .dk-panel { right: 12px; top: 52px; width: 300px; }
+  #stage.compact .dk-stats { left: 12px; bottom: 58px; gap: 14px; padding: 10px 12px; } #stage.compact .dk-btns { left: 12px; bottom: 12px; }
+  #stage.compact #title { zoom: 1.5; inset: auto; left: 0; top: 0; width: 1067px; height: 600px; } #stage.compact #title h1 { font-size: 64px; } #stage.compact #title .goal { max-width: 680px; font-size: 13px; }
+  #stage.compact #result, #stage.compact #ending { zoom: 1.5; inset: auto; left: 0; top: 0; width: 1067px; height: 600px; } #stage.compact .rs-box { max-height: 560px; } #stage.compact .en-box { width: 820px; }
+  #stage.compact #lang { zoom: 1.6; right: 10px; top: 8px; }
+  #rotate { display: none; position: fixed; inset: 0; z-index: 50; background: #0b0d0f; color: #eef0f0; align-items: center; justify-content: center; flex-direction: column; text-align: center; font: 500 18px/1.8 'Noto Sans JP', sans-serif; }
+  #rotate b { font-size: 64px; } #rotate p { padding: 0 24px; } #rotate i { font-style: normal; font-size: 14px; color: rgba(238,240,240,.6); }
+  body.portrait #rotate { display: flex; }
 </style>
 </head>
 <body>
@@ -211,8 +257,15 @@
   <div id="end"><b data-t="lost">FLAGSHIP LOST</b><p id="endsub"></p><button type="button" data-t="again" onclick="location.reload()">AGAIN</button></div>
   <button id="lang" type="button">日本語</button>
 </div>
+<div id="rotate"><b>⟳</b><p>横向きにしてください<br><i>Turn your device sideways</i></p></div>
 <script>
-  function fit() { const s = Math.min(innerWidth / 1600, innerHeight / 900); document.getElementById('stage').style.transform = `translate(-50%, -50%) scale(${s})`; }
+  // the page is laid out at 1600 x 900 and scaled to the window; on a small screen (a phone on its side) the
+  // panels are drawn larger (compact), and held upright it asks to be turned
+  function fit() { const s = Math.min(innerWidth / 1600, innerHeight / 900), st = document.getElementById('stage');
+    st.style.transform = `translate(-50%, -50%) scale(${s})`;
+    const touch = matchMedia('(pointer: coarse)').matches;
+    st.classList.toggle('compact', s < 0.62 || (touch && s < 0.9));
+    document.body.classList.toggle('portrait', innerHeight > innerWidth && matchMedia('(pointer: coarse)').matches); }
   addEventListener('resize', fit); fit();
   const q = new URLSearchParams(location.search);
   if (q.has('clean') || q.has('render')) { for (const id of ['hud', 'ov']) document.getElementById(id).classList.add('hide'); document.getElementById('title').classList.add('gone'); document.getElementById('lang').style.display = 'none'; }
