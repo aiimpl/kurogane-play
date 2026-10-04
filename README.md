@@ -1,12 +1,15 @@
 # Kurogane — Iron Fleet
 
-A real-time fleet battle in your browser. Lead a small iron fleet (one battleship, two heavy cruisers, three destroyers) and break the enemy squadrons that close in from every side. English and Japanese.
+A real-time fleet battle in your browser. You inherit a small shipyard, an old battleship and two destroyers. Build, refit and sail against the Grey Fleet across twenty stages and four seas. English and Japanese.
 
 ▶ Play: https://aiimpl.github.io/kurogane-play/
 
-- Left drag: select ships. Right click on the sea: move there. Right click on an enemy: all chosen ships fire on it.
+- The yard: build ships, refit every turret mount (calibre, barrels, stacking), add AA guns, choose a carrier's air group, fit parts, repair.
+- Overload a ship and she lists; overload her more and her own broadside rolls her over.
+- Carriers send fighters, torpedo bombers and dive bombers on their own; right click an enemy to choose their target.
+- Spoils drop at random from the ships you sink. Saves are encrypted (browser storage, or a .kgs file you can download).
+- Left drag: select ships. Right click on the sea: move there. Right click on an enemy: attack it.
 - Q: the whole fleet. W A S D: pan. Wheel: zoom. Middle drag: rotate. Space: back to the flagship.
-- Ships without orders keep station on the flagship, and every turret picks the nearest enemy in range by itself.
 - PC with a WebGL2 browser (Chrome / Safari / Edge).
 
 This repository contains only the built game.
