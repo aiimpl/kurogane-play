@@ -90,7 +90,8 @@
   #title .hint { font: 400 11px/1.9 'Noto Sans JP', sans-serif; color: var(--dim); letter-spacing: .06em; margin-top: 26px; }
   #lang { position: absolute; right: 26px; top: 22px; pointer-events: auto; cursor: pointer; font: 500 12px/1 'Noto Sans JP', sans-serif; letter-spacing: .12em; color: var(--ink); background: rgba(14,18,22,.35); border: 1px solid rgba(238,240,240,.4); border-radius: 2px; padding: 7px 12px; z-index: 6; }
   #stage:has(#title:not(.gone)) #hud, #stage:has(#title:not(.gone)) #ov { opacity: 0; }
-  #tag { position: absolute; left: 54px; bottom: 48px; font: 600 54px/1 'Oswald', sans-serif; letter-spacing: .06em; color: #eef0f0; opacity: 0; pointer-events: none; text-shadow: 0 2px 24px rgba(0,0,0,.5); }
+  #tag { position: absolute; left: 54px; bottom: 92px; font: 600 46px/1 'Oswald', sans-serif; letter-spacing: .04em; color: #eef0f0; opacity: 0; pointer-events: none; text-shadow: 0 2px 24px rgba(0,0,0,.55); }
+  #cap { position: absolute; left: 56px; bottom: 48px; font: 500 30px/1 'Oswald', sans-serif; letter-spacing: .06em; color: rgba(238,240,240,.85); opacity: 0; pointer-events: none; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
   #endcard { position: absolute; left: 0; right: 0; top: 17%; text-align: center; color: #eef0f0; opacity: 0; pointer-events: none; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
   #endcard b { display: block; font: 600 104px/1 'Oswald', sans-serif; letter-spacing: .32em; margin-left: .32em; }
   #endcard i { display: block; font: 500 18px/1 'Oswald', sans-serif; font-style: normal; letter-spacing: .5em; margin-top: 24px; color: rgba(238,240,240,.75); }
@@ -121,6 +122,7 @@
     <p class="hint" data-t="hint"></p>
   </div>
   <div id="tag"></div>
+  <div id="cap"></div>
   <div id="endcard"><b>KUROGANE</b><i>IRON FLEET · three.js</i></div>
   <div id="end"><b data-t="lost">FLAGSHIP LOST</b><p id="endsub"></p><button type="button" data-t="again" onclick="location.reload()">AGAIN</button></div>
   <button id="lang" type="button">日本語</button>
