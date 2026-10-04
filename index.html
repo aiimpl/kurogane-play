@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kurogane — Iron Fleet</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Cpath d=%22M1 11h14l-2 3H3z M5 11V8h5v3 M7 8V4h2v4 M10 9h5%22 stroke=%22%23e8e0d0%22 fill=%22none%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #eef0f0; --dim: rgba(238, 240, 240, .62); --faint: rgba(238, 240, 240, .3); --own: #d8e2ea; --foe: #ff6a4a; --sel: #9fe0ff; }
+  html, body { margin: 0; height: 100%; background: #0b0d0f; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: 50% 50%; overflow: hidden; user-select: none; -webkit-user-select: none; }
+  #c { width: 100%; height: 100%; display: block; cursor: crosshair; }
+  #ov { position: absolute; inset: 0; pointer-events: none; }
+  #hud { position: absolute; inset: 0; pointer-events: none; color: var(--ink); font: 400 12px/1.4 'Noto Sans JP', system-ui, sans-serif; text-shadow: 0 1px 8px rgba(0,0,0,.45); transition: opacity 1.2s; }
+  #hud.hide, #ov.hide { display: none; }
+  .tl { position: absolute; left: 30px; top: 24px; }
+  .tl b { font: 600 30px/1 'Oswald', sans-serif; letter-spacing: .22em; }
+  .tl i { font-style: normal; display: block; margin-top: 8px; color: var(--dim); letter-spacing: .3em; font-size: 11px; }
+  .tr { position: absolute; right: 30px; top: 70px; text-align: right; font: 500 13px/1.7 'Oswald', sans-serif; letter-spacing: .14em; color: var(--dim); }
+  .tr b, #wave b { color: var(--ink); font-weight: 500; font-size: 22px; letter-spacing: .06em; }
+  #fleet { position: absolute; left: 30px; bottom: 24px; display: flex; gap: 8px; pointer-events: auto; }
+  #fleet button { font: 500 11px/1.3 'Oswald', sans-serif; letter-spacing: .12em; color: var(--ink); background: rgba(14,18,22,.5); border: 1px solid var(--faint); border-radius: 2px; padding: 7px 10px 8px; width: 92px; text-align: left; cursor: pointer; }
+  #fleet button.sel { border-color: var(--sel); box-shadow: 0 0 0 1px var(--sel) inset; }
+  #fleet button.dead { opacity: .3; cursor: default; }
+  #fleet button i { display: block; height: 3px; margin-top: 6px; background: rgba(238,240,240,.18); }
+  #fleet button i::before { content: ''; display: block; height: 100%; width: var(--hp, 100%); background: var(--own); }
+  #fleet button em { font-style: normal; color: var(--dim); display: block; font-size: 10px; margin-top: 2px; }
+  .keys { position: absolute; right: 30px; bottom: 24px; color: var(--dim); font-size: 11px; letter-spacing: .06em; text-align: right; line-height: 2; }
+  kbd { display: inline-block; min-width: 14px; padding: 0 4px; border: 1px solid var(--faint); border-radius: 3px; font: 500 10px/15px 'Noto Sans JP', sans-serif; color: var(--ink); text-align: center; }
+  #msg { position: absolute; left: 50%; top: 16%; transform: translateX(-50%); font: 500 22px/1.5 'Oswald', sans-serif; letter-spacing: .2em; text-align: center; opacity: 0; transition: opacity .8s; white-space: pre-line; }
+  #msg.on { opacity: 1; }
+  .selbox { position: absolute; display: none; border: 1px solid var(--sel); background: rgba(159,224,255,.08); }
+  .bar { position: absolute; left: 0; top: 0; height: 3px; background: rgba(0,0,0,.45); outline: 1px solid rgba(0,0,0,.25); }
+  .bar i { display: block; height: 100%; background: var(--own); }
+  .bar.foe i { background: var(--foe); }
+  .bar.sel { outline: 1px solid var(--sel); }
+  .bar.sel::after { content: ''; position: absolute; left: 50%; top: -9px; margin-left: -4px; border: 4px solid transparent; border-top: 5px solid var(--sel); }
+  .bar.flag::before { content: ''; position: absolute; left: -9px; top: -2px; width: 5px; height: 5px; background: var(--ink); transform: rotate(45deg); }
+  .bar.tgt { outline: 1px solid var(--foe); }
+  .bar.tgt::after { content: ''; position: absolute; left: 50%; top: -10px; margin-left: -4px; border: 4px solid transparent; border-top: 6px solid var(--foe); }
+  .bar.dead { opacity: .25; }
+  .mark { position: absolute; left: -14px; top: -14px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--sel); transform-origin: 50% 50%; margin: -0px; }
+  .mark.atk { border-color: var(--foe); }
+  #title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ink); background: radial-gradient(ellipse at center, rgba(8,10,12,.1), rgba(8,10,12,.55)); transition: opacity 1.4s; text-align: center; }
+  #title.gone { opacity: 0; pointer-events: none; }
+  #title h1 { font: 600 96px/1 'Oswald', sans-serif; letter-spacing: .3em; margin: 0 0 0 .3em; text-shadow: 0 2px 30px rgba(0,0,0,.4); }
+  #title .kanji { font: 600 22px/1 'Shippori Mincho', serif; letter-spacing: .6em; margin: 22px 0 0 .6em; color: var(--dim); }
+  #title .sub { font: 500 15px/1 'Oswald', sans-serif; letter-spacing: .5em; margin: 26px 0 40px; color: var(--dim); }
+  #title .goal { font: 400 14px/2 'Noto Sans JP', sans-serif; letter-spacing: .08em; margin: 0 0 30px; max-width: 760px; }
+  #title button.go { font: 500 16px/1 'Oswald', sans-serif; letter-spacing: .4em; padding: 16px 40px 16px 46px; color: var(--ink); background: rgba(14,18,22,.4); border: 1px solid rgba(238,240,240,.6); border-radius: 2px; cursor: pointer; }
+  #title button.go:hover { background: rgba(238,240,240,.12); }
+  #title button.go:disabled { opacity: .4; }
+  #title .hint { font: 400 11px/1.9 'Noto Sans JP', sans-serif; color: var(--dim); letter-spacing: .06em; margin-top: 26px; }
+  #lang { position: absolute; right: 26px; top: 22px; pointer-events: auto; cursor: pointer; font: 500 12px/1 'Noto Sans JP', sans-serif; letter-spacing: .12em; color: var(--ink); background: rgba(14,18,22,.35); border: 1px solid rgba(238,240,240,.4); border-radius: 2px; padding: 7px 12px; z-index: 6; }
+  #stage:has(#title:not(.gone)) #hud, #stage:has(#title:not(.gone)) #ov { opacity: 0; }
+  #endcard { position: absolute; left: 0; right: 0; top: 17%; text-align: center; color: #eef0f0; opacity: 0; pointer-events: none; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
+  #endcard b { display: block; font: 600 104px/1 'Oswald', sans-serif; letter-spacing: .32em; margin-left: .32em; }
+  #endcard i { display: block; font: 500 18px/1 'Oswald', sans-serif; font-style: normal; letter-spacing: .5em; margin-top: 24px; color: rgba(238,240,240,.75); }
+  #end { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; color: var(--ink); background: rgba(8,10,12,.45); pointer-events: auto; }
+  #end.on { display: flex; }
+  #end b { font: 600 56px/1 'Oswald', sans-serif; letter-spacing: .3em; }
+  #end p { font: 400 15px/2 'Noto Sans JP', sans-serif; letter-spacing: .08em; }
+  #end button { font: 500 14px/1 'Oswald', sans-serif; letter-spacing: .3em; padding: 12px 30px; color: var(--ink); background: transparent; border: 1px solid var(--faint); cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c"></canvas>
+  <div id="ov"></div>
+  <div id="hud">
+    <div class="tl"><b>KUROGANE</b><i data-t="titleSub">IRON FLEET</i></div>
+    <div class="tr"><div id="wave"></div><div><span data-t="sunk">SUNK</span> <b id="sunk">0</b> <span id="tons"></span></div></div>
+    <div id="fleet"></div>
+    <div id="msg"></div>
+    <div class="keys" data-t="keys"></div>
+  </div>
+  <div id="title">
+    <h1>KUROGANE</h1>
+    <p class="kanji">黒鉄</p>
+    <p class="sub" data-t="cardSub">IRON FLEET</p>
+    <p class="goal" data-t="goal"></p>
+    <button class="go" type="button" disabled data-t="start">START</button>
+    <p class="hint" data-t="hint"></p>
+  </div>
+  <div id="endcard"><b>KUROGANE</b><i>IRON FLEET · three.js</i></div>
+  <div id="end"><b data-t="lost">FLAGSHIP LOST</b><p id="endsub"></p><button type="button" data-t="again" onclick="location.reload()">AGAIN</button></div>
+  <button id="lang" type="button">日本語</button>
+</div>
+<script>
+  function fit() { const s = Math.min(innerWidth / 1600, innerHeight / 900); document.getElementById('stage').style.transform = `translate(-50%, -50%) scale(${s})`; }
+  addEventListener('resize', fit); fit();
+  const q = new URLSearchParams(location.search);
+  if (q.has('clean') || q.has('render')) { for (const id of ['hud', 'ov']) document.getElementById(id).classList.add('hide'); document.getElementById('title').classList.add('gone'); document.getElementById('lang').style.display = 'none'; }
+</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
