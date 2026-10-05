@@ -95,6 +95,9 @@
   .dk-btns .dk-go { border-color: rgba(238,240,240,.7); padding: 9px 28px; }
   .dk-msg { position: absolute; left: 50%; top: 16%; transform: translateX(-50%); font: 500 22px/1.4 'Oswald', 'Noto Sans JP', sans-serif; letter-spacing: .16em; opacity: 0; transition: opacity .6s; text-align: center; }
   .dk-msg.on { opacity: 1; }
+  #loadbar { width: 260px; height: 2px; margin-top: 18px; background: rgba(238,240,240,.15); transition: opacity .6s; }
+  #loadbar i { display: block; height: 100%; width: var(--p, 4%); background: rgba(238,240,240,.8); transition: width .4s; }
+  #title:has(.go:not(:disabled)) #loadbar { opacity: 0; }
   #title .hint { font: 400 11px/1.9 'Noto Sans JP', sans-serif; color: var(--dim); letter-spacing: .06em; margin-top: 26px; }
   #lang { position: absolute; right: 26px; top: 22px; pointer-events: auto; cursor: pointer; font: 500 12px/1 'Noto Sans JP', sans-serif; letter-spacing: .12em; color: var(--ink); background: rgba(14,18,22,.35); border: 1px solid rgba(238,240,240,.4); border-radius: 2px; padding: 7px 12px; z-index: 6; }
   #stage:has(#title:not(.gone)) #hud, #stage:has(#title:not(.gone)) #ov { opacity: 0; }
@@ -249,6 +252,7 @@
     <p class="sub" data-t="cardSub">IRON FLEET</p>
     <p class="goal" data-t="goal"></p>
     <div class="gos"><button class="go" type="button" disabled data-t="start">START</button><button class="go refit" type="button" data-t="refitBtn">REFIT</button></div>
+    <div id="loadbar"><i></i></div>
     <p class="hint" data-t="hint"></p>
   </div>
   <div id="tag"></div>
